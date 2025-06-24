@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080">
+  <defs>
+    <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#27ae60;stop-opacity:0.8" />
+      <stop offset="100%" style="stop-color:#2c3e50;stop-opacity:0.9" />
+    </linearGradient>
+    <pattern id="pattern1" width="50" height="50" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <rect width="10" height="10" fill="rgba(255,255,255,0.05)" />
+    </pattern>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="100%" height="100%" fill="url(#grad1)" />
+  
+  <!-- Pattern overlay -->
+  <rect width="100%" height="100%" fill="url(#pattern1)" />
+  
+  <!-- Food elements -->
+  <g opacity="0.15" fill="#ffffff">
+    <!-- Fruits and vegetables -->
+    <circle cx="200" cy="200" r="80" />
+    <circle cx="1700" cy="300" r="100" />
+    <circle cx="400" cy="800" r="120" />
+    <circle cx="1500" cy="700" r="90" />
+    
+    <!-- Abstract food shapes -->
+    <rect x="600" y="200" width="150" height="150" rx="20" />
+    <rect x="1200" y="500" width="180" height="180" rx="20" />
+    <rect x="300" y="500" width="120" height="120" rx="20" />
+    <rect x="1600" y="800" width="140" height="140" rx="20" />
+    
+    <!-- Utensils -->
+    <path d="M800,300 L900,200 L920,220 L820,320 Z" />
+    <path d="M1000,800 L1100,700 L1120,720 L1020,820 Z" />
+  </g>
+  
+  <!-- Subtle wave patterns -->
+  <path d="M0,700 Q480,600 960,700 T1920,700 V1080 H0 Z" fill="rgba(255,255,255,0.05)" />
+  <path d="M0,750 Q480,650 960,750 T1920,750 V1080 H0 Z" fill="rgba(255,255,255,0.03)" />
+</svg>
