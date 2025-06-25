@@ -79,166 +79,51 @@
                 <p>Découvrez notre sélection de packs alimentaires adaptés à tous vos besoins</p>
             </div>
             <div class="packs-grid">
-                <!-- Pack 1 -->
-                <div class="pack-card">
-                    <div class="pack-image">
-                        <img src="images/pack1.jpg" alt="Pack Familial">
-                        <div class="pack-tag">Populaire</div>
-                    </div>
-                    <div class="pack-details">
-                        <h3>Pack Familial</h3>
-                        <p class="pack-description">Un pack complet pour nourrir toute la famille pendant une semaine. Contient des produits frais et des aliments de base.</p>
-                        <div class="pack-content">
-                            <h4>Contenu du pack:</h4>
-                            <ul>
-                                <li>5kg de riz</li>
-                                <li>2kg de pâtes</li>
-                                <li>3L d'huile</li>
-                                <li>2kg de viande</li>
-                                <li>Assortiment de légumes</li>
-                                <li>Fruits de saison</li>
-                            </ul>
+                @forelse($packsAlimentaires as $pack)
+                    <div class="pack-card">
+                        <div class="pack-image">
+                            @if($pack->image)
+                                <img src="{{ asset('site_assets/images/' . $pack->image) }}" alt="{{ $pack->nom }}">
+                            @else
+                                <img src="{{ asset('site_assets/images/default-pack.jpg') }}" alt="{{ $pack->nom }}">
+                            @endif
+                            @if($pack->tag)
+                                <div class="pack-tag">{{ $pack->tag }}</div>
+                            @endif
                         </div>
-                        <div class="pack-footer">
-                            <div class="pack-price">45,000 FCFA</div>
-                            <button class="add-to-cart" data-id="1" data-name="Pack Familial" data-price="45000" data-image="images/pack1.jpg">Ajouter au panier</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Pack 2 -->
-                <div class="pack-card">
-                    <div class="pack-image">
-                        <img src="images/pack2.jpg" alt="Pack Économique">
-                        <div class="pack-tag">Économique</div>
-                    </div>
-                    <div class="pack-details">
-                        <h3>Pack Économique</h3>
-                        <p class="pack-description">Un pack essentiel à prix abordable contenant tous les aliments de base nécessaires pour une personne.</p>
-                        <div class="pack-content">
-                            <h4>Contenu du pack:</h4>
-                            <ul>
-                                <li>2kg de riz</li>
-                                <li>1kg de pâtes</li>
-                                <li>1L d'huile</li>
-                                <li>1kg de viande</li>
-                                <li>Assortiment de légumes</li>
-                            </ul>
-                        </div>
-                        <div class="pack-footer">
-                            <div class="pack-price">25,000 FCFA</div>
-                            <button class="add-to-cart" data-id="2" data-name="Pack Économique" data-price="25000" data-image="images/pack2.jpg">Ajouter au panier</button>
+                        <div class="pack-details">
+                            <h3>{{ $pack->nom }}</h3>
+                            <p class="pack-description">{{ $pack->description }}</p>
+                            <div class="pack-content">
+                                <h4>Contenu du pack:</h4>
+                                <div class="pack-content-text">
+                                    {!! nl2br(e($pack->contenu)) !!}
+                                </div>
+                            </div>
+                            <div class="pack-footer">
+                                @if($pack->en_promotion)
+                                    <div class="pack-price">
+                                        <span class="original-price" style="text-decoration: line-through; color: #999; margin-right: 10px;">{{ number_format($pack->prix_original, 0, ',', ' ') }} FCFA</span>
+                                        <span class="promo-price" style="color: #e74c3c; font-weight: bold;">{{ number_format($pack->prix, 0, ',', ' ') }} FCFA</span>
+                                    </div>
+                                @else
+                                    <div class="pack-price">{{ number_format($pack->prix, 0, ',', ' ') }} FCFA</div>
+                                @endif
+                                <button class="add-to-cart" 
+                                    data-id="{{ $pack->id }}" 
+                                    data-name="{{ $pack->nom }}" 
+                                    data-price="{{ $pack->prix }}" 
+                                    data-image="{{ $pack->image ? asset('site_assets/images/' . $pack->image) : asset('site_assets/images/default-pack.jpg') }}">
+                                    Ajouter au panier
+                                </button>
+                            </div>
                         </div>
                     </div>
-                </div>
-
-                <!-- Pack 3 -->
-                <div class="pack-card">
-                    <div class="pack-image">
-                        <img src="images/pack3.jpg" alt="Pack Premium">
-                        <div class="pack-tag">Premium</div>
+                @empty
+                    <div class="no-packs">
+                        <p>Aucun pack alimentaire disponible pour le moment.</p>
                     </div>
-                    <div class="pack-details">
-                        <h3>Pack Premium</h3>
-                        <p class="pack-description">Notre pack haut de gamme avec des produits de qualité supérieure et des spécialités gastronomiques.</p>
-                        <div class="pack-content">
-                            <h4>Contenu du pack:</h4>
-                            <ul>
-                                <li>5kg de riz basmati</li>
-                                <li>2kg de pâtes italiennes</li>
-                                <li>2L d'huile d'olive extra vierge</li>
-                                <li>3kg de viandes assorties</li>
-                                <li>Légumes bio</li>
-                                <li>Fruits exotiques</li>
-                                <li>Assortiment d'épices</li>
-                            </ul>
-                        </div>
-                        <div class="pack-footer">
-                            <div class="pack-price">75,000 FCFA</div>
-                            <button class="add-to-cart" data-id="3" data-name="Pack Premium" data-price="75000" data-image="images/pack3.jpg">Ajouter au panier</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Pack 4 -->
-                <div class="pack-card">
-                    <div class="pack-image">
-                        <img src="images/pack4.jpg" alt="Pack Végétarien">
-                        <div class="pack-tag">Végétarien</div>
-                    </div>
-                    <div class="pack-details">
-                        <h3>Pack Végétarien</h3>
-                        <p class="pack-description">Un pack complet de produits végétariens riches en protéines et en nutriments essentiels.</p>
-                        <div class="pack-content">
-                            <h4>Contenu du pack:</h4>
-                            <ul>
-                                <li>3kg de riz complet</li>
-                                <li>2kg de légumineuses</li>
-                                <li>1L d'huile végétale</li>
-                                <li>Assortiment de légumes frais</li>
-                                <li>Fruits de saison</li>
-                                <li>Noix et graines</li>
-                            </ul>
-                        </div>
-                        <div class="pack-footer">
-                            <div class="pack-price">35,000 FCFA</div>
-                            <button class="add-to-cart" data-id="4" data-name="Pack Végétarien" data-price="35000" data-image="images/pack4.jpg">Ajouter au panier</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Pack 5 -->
-                <div class="pack-card">
-                    <div class="pack-image">
-                        <img src="images/pack5.jpg" alt="Pack Petit Déjeuner">
-                        <div class="pack-tag">Spécial</div>
-                    </div>
-                    <div class="pack-details">
-                        <h3>Pack Petit Déjeuner</h3>
-                        <p class="pack-description">Tout ce dont vous avez besoin pour des petits déjeuners équilibrés et énergisants pendant un mois.</p>
-                        <div class="pack-content">
-                            <h4>Contenu du pack:</h4>
-                            <ul>
-                                <li>Céréales variées</li>
-                                <li>Pains spéciaux</li>
-                                <li>Confitures artisanales</li>
-                                <li>Miel naturel</li>
-                                <li>Thé et café</li>
-                                <li>Jus de fruits</li>
-                            </ul>
-                        </div>
-                        <div class="pack-footer">
-                            <div class="pack-price">30,000 FCFA</div>
-                            <button class="add-to-cart" data-id="5" data-name="Pack Petit Déjeuner" data-price="30000" data-image="images/pack5.jpg">Ajouter au panier</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Pack 6 -->
-                <div class="pack-card">
-                    <div class="pack-image">
-                        <img src="images/pack6.jpg" alt="Pack Fête">
-                        <div class="pack-tag">Festif</div>
-                    </div>
-                    <div class="pack-details">
-                        <h3>Pack Fête</h3>
-                        <p class="pack-description">Un assortiment complet pour organiser vos événements et célébrations avec des produits de qualité.</p>
-                        <div class="pack-content">
-                            <h4>Contenu du pack:</h4>
-                            <ul>
-                                <li>Viandes pour grillades</li>
-                                <li>Accompagnements variés</li>
-                                <li>Sauces et épices</li>
-                                <li>Boissons non alcoolisées</li>
-                                <li>Desserts assortis</li>
-                            </ul>
-                        </div>
-                        <div class="pack-footer">
-                            <div class="pack-price">60,000 FCFA</div>
-                            <button class="add-to-cart" data-id="6" data-name="Pack Fête" data-price="60000" data-image="images/pack6.jpg">Ajouter au panier</button>
-                        </div>
-                    </div>
-                </div>
+                @endforelse
             </div>
         </div>
     </section>

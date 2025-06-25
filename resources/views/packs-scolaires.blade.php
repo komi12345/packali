@@ -112,11 +112,18 @@
                                 </div>
                             </div>
                             <div class="pack-footer">
-                                <div class="pack-price">{{ number_format($pack->prix, 0, ',', ' ') }} FCFA</div>
-                                <button class="add-to-cart" 
-                                        data-id="{{ $pack->id }}" 
-                                        data-name="{{ $pack->nom }}" 
-                                        data-price="{{ $pack->prix }}" 
+                                @if($pack->en_promotion)
+                                    <div class="pack-price">
+                                        <span class="original-price" style="text-decoration: line-through; color: #999; margin-right: 10px;">{{ number_format($pack->prix_original, 0, ',', ' ') }} FCFA</span>
+                                        <span class="promo-price" style="color: #e74c3c; font-weight: bold;">{{ number_format($pack->prix, 0, ',', ' ') }} FCFA</span>
+                                    </div>
+                                @else
+                                    <div class="pack-price">{{ number_format($pack->prix, 0, ',', ' ') }} FCFA</div>
+                                @endif
+                                <button class="add-to-cart"
+                                        data-id="{{ $pack->id }}"
+                                        data-name="{{ $pack->nom }}"
+                                        data-price="{{ $pack->prix }}"
                                         data-image="{{ $pack->image ? asset('site_assets/images/' . $pack->image) : asset('site_assets/images/default-pack.jpg') }}">
                                     Ajouter au panier
                                 </button>

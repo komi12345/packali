@@ -25,6 +25,17 @@ class PackScolaire extends Model
     }
 
     /**
+     * Get the current active promotion for this pack
+     */
+    public function activePromotion()
+    {
+        return $this->promotions()
+            ->where('date_debut', '<=', now())
+            ->where('date_fin', '>=', now())
+            ->first();
+    }
+
+    /**
      * The orders that belong to the school pack.
      */
     public function orders()

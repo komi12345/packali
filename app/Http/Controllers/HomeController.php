@@ -2,23 +2,23 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\PackScolaire;
+use App\Models\PackAlimentaire;
 use App\Models\Promotion;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
-class PackScolairePublicController extends Controller
+class HomeController extends Controller
 {
     public function index()
     {
-        // Récupérer tous les packs scolaires avec leurs promotions actives
-        $packsScolaires = PackScolaire::with(['promotions' => function ($query) {
+        // Récupérer tous les packs alimentaires avec leurs promotions actives
+        $packsAlimentaires = PackAlimentaire::with(['promotions' => function ($query) {
             $query->where('date_debut', '<=', Carbon::now())
                   ->where('date_fin', '>=', Carbon::now());
-        }])->orderBy('niveau_scolaire')->get();
+        }])->get();
 
         // Pour chaque pack, déterminer le prix à afficher (normal ou promotionnel)
-        $packsScolaires->each(function ($pack) {
+        $packsAlimentaires->each(function ($pack) {
             $activePromotion = $pack->promotions->first();
             if ($activePromotion) {
                 $pack->prix_original = $pack->prix;
@@ -29,6 +29,6 @@ class PackScolairePublicController extends Controller
             }
         });
 
-        return view('packs-scolaires', compact('packsScolaires'));
+        return view('welcome', compact('packsAlimentaires'));
     }
 }
