@@ -26,7 +26,10 @@
                             <thead class="bg-gray-50 dark:bg-gray-700">
                                 <tr>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                        Pack Alimentaire
+                                        Type de Pack
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                        Nom du Pack
                                     </th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                                         Prix Promotionnel
@@ -45,11 +48,22 @@
                             <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                                 @forelse ($promotions as $promotion)
                                     <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            @if($promotion->type_pack === 'scolaire')
+                                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                                    Scolaire
+                                                </span>
+                                            @else
+                                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                                                    Alimentaire
+                                                </span>
+                                            @endif
+                                        </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100">
-                                            {{ $promotion->packAlimentaire->nom ?? 'N/A' }}
+                                            {{ $promotion->pack_name }}
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
-                                            {{ $promotion->prix_promotionnel }} €
+                                            {{ number_format($promotion->prix_promotionnel, 0, ',', ' ') }} FCFA
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
                                             {{ $promotion->date_debut }}
@@ -69,7 +83,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="5" class="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-500 dark:text-gray-300">
+                                        <td colspan="6" class="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-500 dark:text-gray-300">
                                             Aucune promotion trouvée.
                                         </td>
                                     </tr>

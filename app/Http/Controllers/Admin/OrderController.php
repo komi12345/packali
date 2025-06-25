@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\PackAlimentaire;
+use App\Models\PackScolaire;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB; // Added for transaction
 
@@ -15,7 +16,7 @@ class OrderController extends Controller
      */
     public function index()
     {
-        $orders = Order::with('packAlimentaires')->latest()->paginate(10);
+        $orders = Order::with(['packAlimentaires', 'packScolaires'])->latest()->paginate(10);
         return view('admin.orders.index', compact('orders'));
     }
 
@@ -25,7 +26,8 @@ class OrderController extends Controller
     public function create()
     {
         $packAlimentaires = PackAlimentaire::orderBy('nom')->get();
-        return view('admin.orders.create', compact('packAlimentaires'));
+        $packScolaires = PackScolaire::orderBy('nom')->get();
+        return view('admin.orders.create', compact('packAlimentaires', 'packScolaires'));
     }
 
     /**
@@ -38,18 +40,35 @@ class OrderController extends Controller
             'client_phone' => 'required|string|max:20',
             'delivery_address' => 'required|string',
             'order_date' => 'required|date',
-            'pack_alimentaires' => 'required|array|min:1',
+            'pack_alimentaires' => 'nullable|array',
             'pack_alimentaires.*' => 'exists:pack_alimentaires,id',
+            'pack_scolaires' => 'nullable|array',
+            'pack_scolaires.*' => 'exists:pack_scolaires,id',
             'status' => 'required|string|in:pas encore livré,livré',
             // total_price will be calculated
         ]);
 
+        // Validation pour s'assurer qu'au moins un type de pack est sélectionné
+        if (empty($validatedData['pack_alimentaires']) && empty($validatedData['pack_scolaires'])) {
+            return redirect()->back()->withInput()->with('error', 'Veuillez sélectionner au moins un pack.');
+        }
+
         DB::beginTransaction();
         try {
             $totalPrice = 0;
+
+            // Calcul du prix pour les packs alimentaires
             if (isset($validatedData['pack_alimentaires'])) {
-                $packs = PackAlimentaire::findMany($validatedData['pack_alimentaires']);
-                foreach ($packs as $pack) {
+                $foodPacks = PackAlimentaire::findMany($validatedData['pack_alimentaires']);
+                foreach ($foodPacks as $pack) {
+                    $totalPrice += $pack->prix;
+                }
+            }
+
+            // Calcul du prix pour les packs scolaires
+            if (isset($validatedData['pack_scolaires'])) {
+                $schoolPacks = PackScolaire::findMany($validatedData['pack_scolaires']);
+                foreach ($schoolPacks as $pack) {
                     $totalPrice += $pack->prix;
                 }
             }
@@ -63,8 +82,28 @@ class OrderController extends Controller
                 'status' => $validatedData['status'],
             ]);
 
+            // Attacher les packs alimentaires avec leur prix au moment de la commande
             if (isset($validatedData['pack_alimentaires'])) {
-                $order->packAlimentaires()->attach($validatedData['pack_alimentaires']);
+                $attachData = [];
+                foreach ($foodPacks as $pack) {
+                    $attachData[$pack->id] = [
+                        'price_at_time' => $pack->prix,
+                        'quantity' => 1
+                    ];
+                }
+                $order->packAlimentaires()->attach($attachData);
+            }
+
+            // Attacher les packs scolaires avec leur prix au moment de la commande
+            if (isset($validatedData['pack_scolaires'])) {
+                $attachData = [];
+                foreach ($schoolPacks as $pack) {
+                    $attachData[$pack->id] = [
+                        'price_at_time' => $pack->prix,
+                        'quantity' => 1
+                    ];
+                }
+                $order->packScolaires()->attach($attachData);
             }
             
             DB::commit();
@@ -80,7 +119,7 @@ class OrderController extends Controller
      */
     public function show(Order $order)
     {
-        $order->load('packAlimentaires');
+        $order->load(['packAlimentaires', 'packScolaires']);
         return view('admin.orders.show', compact('order'));
     }
 
@@ -90,8 +129,9 @@ class OrderController extends Controller
     public function edit(Order $order)
     {
         $packAlimentaires = PackAlimentaire::orderBy('nom')->get();
-        $order->load('packAlimentaires'); // Eager load for pre-selection
-        return view('admin.orders.edit', compact('order', 'packAlimentaires'));
+        $packScolaires = PackScolaire::orderBy('nom')->get();
+        $order->load(['packAlimentaires', 'packScolaires']); // Eager load for pre-selection
+        return view('admin.orders.edit', compact('order', 'packAlimentaires', 'packScolaires'));
     }
 
     /**
@@ -104,17 +144,34 @@ class OrderController extends Controller
             'client_phone' => 'required|string|max:20',
             'delivery_address' => 'required|string',
             'order_date' => 'required|date',
-            'pack_alimentaires' => 'required|array|min:1',
+            'pack_alimentaires' => 'nullable|array',
             'pack_alimentaires.*' => 'exists:pack_alimentaires,id',
+            'pack_scolaires' => 'nullable|array',
+            'pack_scolaires.*' => 'exists:pack_scolaires,id',
             'status' => 'required|string|in:pas encore livré,livré',
         ]);
+
+        // Validation pour s'assurer qu'au moins un type de pack est sélectionné
+        if (empty($validatedData['pack_alimentaires']) && empty($validatedData['pack_scolaires'])) {
+            return redirect()->back()->withInput()->with('error', 'Veuillez sélectionner au moins un pack.');
+        }
 
         DB::beginTransaction();
         try {
             $totalPrice = 0;
+
+            // Calcul du prix pour les packs alimentaires
             if (isset($validatedData['pack_alimentaires'])) {
-                $packs = PackAlimentaire::findMany($validatedData['pack_alimentaires']);
-                foreach ($packs as $pack) {
+                $foodPacks = PackAlimentaire::findMany($validatedData['pack_alimentaires']);
+                foreach ($foodPacks as $pack) {
+                    $totalPrice += $pack->prix;
+                }
+            }
+
+            // Calcul du prix pour les packs scolaires
+            if (isset($validatedData['pack_scolaires'])) {
+                $schoolPacks = PackScolaire::findMany($validatedData['pack_scolaires']);
+                foreach ($schoolPacks as $pack) {
                     $totalPrice += $pack->prix;
                 }
             }
@@ -128,8 +185,32 @@ class OrderController extends Controller
                 'status' => $validatedData['status'],
             ]);
 
+            // Synchroniser les packs alimentaires avec leur prix au moment de la commande
             if (isset($validatedData['pack_alimentaires'])) {
-                $order->packAlimentaires()->sync($validatedData['pack_alimentaires']);
+                $syncData = [];
+                foreach ($foodPacks as $pack) {
+                    $syncData[$pack->id] = [
+                        'price_at_time' => $pack->prix,
+                        'quantity' => 1
+                    ];
+                }
+                $order->packAlimentaires()->sync($syncData);
+            } else {
+                $order->packAlimentaires()->sync([]);
+            }
+
+            // Synchroniser les packs scolaires avec leur prix au moment de la commande
+            if (isset($validatedData['pack_scolaires'])) {
+                $syncData = [];
+                foreach ($schoolPacks as $pack) {
+                    $syncData[$pack->id] = [
+                        'price_at_time' => $pack->prix,
+                        'quantity' => 1
+                    ];
+                }
+                $order->packScolaires()->sync($syncData);
+            } else {
+                $order->packScolaires()->sync([]);
             }
             
             DB::commit();

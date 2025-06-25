@@ -18,7 +18,7 @@
                         <div>
                             <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">{{ __('Informations Commande') }}</h3>
                             <p><strong>{{ __('Date de Commande:') }}</strong> {{ \Carbon\Carbon::parse($order->order_date)->format('d/m/Y') }}</p>
-                            <p><strong>{{ __('Prix Total:') }}</strong> {{ number_format($order->total_price, 2, ',', ' ') }} €</p>
+                            <p><strong>{{ __('Prix Total:') }}</strong> {{ number_format($order->total_price, 0, ',', ' ') }} FCFA</p>
                             <p><strong>{{ __('Statut:') }}</strong> 
                                 <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
                                     {{ $order->status === 'livré' ? 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200' : 'bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200' }}">
@@ -33,7 +33,7 @@
                         @if($order->packAlimentaires->isNotEmpty())
                             <ul class="list-disc list-inside space-y-1">
                                 @foreach($order->packAlimentaires as $pack)
-                                    <li>{{ $pack->nom }} - {{ number_format($pack->prix, 2, ',', ' ') }} €</li>
+                                    <li>{{ $pack->nom }} - {{ number_format($pack->prix, 0, ',', ' ') }} FCFA</li>
                                 @endforeach
                             </ul>
                         @else

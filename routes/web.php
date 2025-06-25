@@ -7,6 +7,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/packs-scolaires', [App\Http\Controllers\PackScolairePublicController::class, 'index'])->name('packs-scolaires');
+
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
@@ -24,6 +26,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/dashboard', [App\Http\Controllers\Admin\AdminDashboardController::class, 'index'])->name('dashboard');
     Route::get('/search', [App\Http\Controllers\Admin\AdminDashboardController::class, 'search'])->name('search'); // Nouvelle route pour la recherche
     Route::resource('packs', App\Http\Controllers\Admin\PackAlimentaireController::class)->parameters(['packs' => 'packAlimentaire']);
+    Route::resource('pack-scolaires', App\Http\Controllers\Admin\PackScolaireController::class)->parameters(['pack-scolaires' => 'packScolaire']);
     Route::resource('promotions', App\Http\Controllers\Admin\PromotionController::class);
     Route::resource('orders', App\Http\Controllers\Admin\OrderController::class);
     Route::get('clients', [App\Http\Controllers\Admin\ClientController::class, 'index'])->name('clients.index');

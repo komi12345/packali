@@ -35,5 +35,12 @@ class Order extends Model
     {
         return $this->belongsToMany(PackAlimentaire::class, 'order_pack_alimentaire');
     }
-    //
+
+    /**
+     * The school packs that belong to the order.
+     */
+    public function packScolaires()
+    {
+        return $this->belongsToMany(PackScolaire::class, 'order_pack_scolaire');
+    }
 }

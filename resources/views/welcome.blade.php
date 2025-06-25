@@ -18,7 +18,8 @@
             <nav>
                 <ul class="nav-links">
                     <li><a href="#" class="active">Accueil</a></li>
-                    <li><a href="#packs">Nos Packs</a></li>
+                    <li><a href="#packs">Packs Alimentaires</a></li>
+                    <li><a href="/packs-scolaires">Packs Scolaires</a></li>
                     <li><a href="#about">À Propos</a></li>
                     <li><a href="#contact">Contact</a></li>
                 </ul>
@@ -242,6 +243,52 @@
         </div>
     </section>
 
+    <!-- Packs Scolaires Promo Section -->
+    <section class="packs-scolaires-promo">
+        <div class="container">
+            <div class="promo-content">
+                <div class="promo-text">
+                    <h2>Découvrez Nos Packs Scolaires</h2>
+                    <p>Préparez la rentrée scolaire avec nos packs complets adaptés à tous les niveaux d'études. De la maternelle à l'université, nous avons tout ce qu'il faut pour une année scolaire réussie.</p>
+                    <div class="promo-features">
+                        <div class="promo-feature">
+                            <i class="fas fa-graduation-cap"></i>
+                            <span>Tous niveaux scolaires</span>
+                        </div>
+                        <div class="promo-feature">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Matériel de qualité</span>
+                        </div>
+                        <div class="promo-feature">
+                            <i class="fas fa-tags"></i>
+                            <span>Prix avantageux</span>
+                        </div>
+                    </div>
+                    <a href="/packs-scolaires" class="btn-primary">Voir les packs scolaires</a>
+                </div>
+                <div class="promo-image">
+                    <div class="promo-cards">
+                        <div class="mini-pack-card">
+                            <h4>Pack Primaire</h4>
+                            <p>Tout pour le primaire</p>
+                            <span class="mini-price">25,000 FCFA</span>
+                        </div>
+                        <div class="mini-pack-card">
+                            <h4>Pack Collège</h4>
+                            <p>Matériel complet</p>
+                            <span class="mini-price">45,000 FCFA</span>
+                        </div>
+                        <div class="mini-pack-card">
+                            <h4>Pack Lycée</h4>
+                            <p>Spécialisé sciences</p>
+                            <span class="mini-price">65,000 FCFA</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- About Section -->
     <section id="about" class="about">
         <div class="container">
@@ -401,7 +448,8 @@
                     <h3>Liens Rapides</h3>
                     <ul>
                         <li><a href="#">Accueil</a></li>
-                        <li><a href="#packs">Nos Packs</a></li>
+                        <li><a href="#packs">Packs Alimentaires</a></li>
+                        <li><a href="/packs-scolaires">Packs Scolaires</a></li>
                         <li><a href="#about">À Propos</a></li>
                         <li><a href="#contact">Contact</a></li>
                     </ul>

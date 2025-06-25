@@ -45,11 +45,25 @@
                             <select name="pack_alimentaires[]" id="pack_alimentaires" multiple class="block mt-1 w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm h-40">
                                 @foreach ($packAlimentaires as $pack)
                                     <option value="{{ $pack->id }}" {{ in_array($pack->id, old('pack_alimentaires', [])) ? 'selected' : '' }}>
-                                        {{ $pack->nom }} ({{ number_format($pack->prix, 2, ',', ' ') }} €)
+                                        {{ $pack->nom }} ({{ number_format($pack->prix, 0, ',', ' ') }} FCFA)
                                     </option>
                                 @endforeach
                             </select>
                             <x-input-error :messages="$errors->get('pack_alimentaires')" class="mt-2" />
+                            <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">{{ __('Maintenez la touche Ctrl (ou Cmd sur Mac) pour sélectionner plusieurs packs.') }}</p>
+                        </div>
+
+                        <!-- Pack Scolaires -->
+                        <div class="mb-4">
+                            <x-input-label for="pack_scolaires" :value="__('Packs Scolaires Commandés')" />
+                            <select name="pack_scolaires[]" id="pack_scolaires" multiple class="block mt-1 w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm h-40">
+                                @foreach ($packScolaires as $pack)
+                                    <option value="{{ $pack->id }}" {{ in_array($pack->id, old('pack_scolaires', [])) ? 'selected' : '' }}>
+                                        {{ $pack->nom }} ({{ number_format($pack->prix, 0, ',', ' ') }} FCFA)
+                                    </option>
+                                @endforeach
+                            </select>
+                            <x-input-error :messages="$errors->get('pack_scolaires')" class="mt-2" />
                             <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">{{ __('Maintenez la touche Ctrl (ou Cmd sur Mac) pour sélectionner plusieurs packs.') }}</p>
                         </div>
                         
@@ -87,20 +101,32 @@
     @push('scripts')
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            const packsSelect = document.getElementById('pack_alimentaires');
+            const packAlimentairesSelect = document.getElementById('pack_alimentaires');
+            const packScolairesSelect = document.getElementById('pack_scolaires');
             const totalPriceInput = document.getElementById('total_price');
-            const packPrices = JSON.parse('@json($packAlimentaires->pluck('prix', 'id'))');
+            const packAlimentairesPrices = JSON.parse('@json($packAlimentaires->pluck('prix', 'id'))');
+            const packScolairesPrices = JSON.parse('@json($packScolaires->pluck('prix', 'id'))');
 
             function calculateTotalPrice() {
                 let total = 0;
-                const selectedOptions = Array.from(packsSelect.selectedOptions);
-                selectedOptions.forEach(option => {
-                    total += parseFloat(packPrices[option.value]);
+                
+                // Calculer le total des packs alimentaires
+                const selectedAlimentaires = Array.from(packAlimentairesSelect.selectedOptions);
+                selectedAlimentaires.forEach(option => {
+                    total += parseFloat(packAlimentairesPrices[option.value]);
                 });
-                totalPriceInput.value = total.toFixed(2);
+                
+                // Calculer le total des packs scolaires
+                const selectedScolaires = Array.from(packScolairesSelect.selectedOptions);
+                selectedScolaires.forEach(option => {
+                    total += parseFloat(packScolairesPrices[option.value]);
+                });
+                
+                totalPriceInput.value = total.toFixed(0);
             }
 
-            packsSelect.addEventListener('change', calculateTotalPrice);
+            packAlimentairesSelect.addEventListener('change', calculateTotalPrice);
+            packScolairesSelect.addEventListener('change', calculateTotalPrice);
             calculateTotalPrice(); // Initial calculation
         });
     </script>

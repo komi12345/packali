@@ -212,7 +212,11 @@
                             <div class="space-y-2">
                                 <a href="{{ route('admin.packs.index') }}" class="flex items-center space-x-4 p-3 rounded-lg {{ request()->routeIs('admin.packs.*') ? 'bg-indigo-600' : 'hover:bg-gray-700' }} cursor-pointer transition-all">
                                     <span class="material-symbols-outlined">restaurant_menu</span>
-                                    <span class="font-medium">Produits</span>
+                                    <span class="font-medium">Packs Alimentaires</span>
+                                </a>
+                                <a href="{{ route('admin.pack-scolaires.index') }}" class="flex items-center space-x-4 p-3 rounded-lg {{ request()->routeIs('admin.pack-scolaires.*') ? 'bg-indigo-600' : 'hover:bg-gray-700' }} cursor-pointer transition-all">
+                                    <span class="material-symbols-outlined">school</span>
+                                    <span class="font-medium">Packs Scolaires</span>
                                 </a>
                                 <a href="{{ route('admin.promotions.index') }}" class="flex items-center space-x-4 p-3 rounded-lg {{ request()->routeIs('admin.promotions.*') ? 'bg-indigo-600' : 'hover:bg-gray-700' }} cursor-pointer transition-all">
                                     <span class="material-symbols-outlined">local_offer</span>
@@ -258,5 +262,8 @@
                 </div>
             </div>
         </div>
+        
+        <!-- Scripts -->
+        @stack('scripts')
     </body>
 </html>
