@@ -26,7 +26,16 @@ return new class extends Migration
             $table->id();
             $table->foreignId('order_id')->constrained()->onDelete('cascade');
             $table->foreignId('pack_alimentaire_id')->constrained()->onDelete('cascade');
-            // Add quantity if needed, e.g., $table->integer('quantity')->default(1);
+            $table->decimal('price_at_time', 8, 2);
+            $table->integer('quantity')->default(1);
+            $table->timestamps();
+        });
+        Schema::create('order_pack_scolaire', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('order_id')->constrained()->onDelete('cascade');
+            $table->foreignId('pack_scolaire_id')->constrained()->onDelete('cascade');
+            $table->integer('quantity')->default(1);
+            $table->decimal('price_at_time', 10, 2); // Prix au moment de la commande
             $table->timestamps();
         });
     }

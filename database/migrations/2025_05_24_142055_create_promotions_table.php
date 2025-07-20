@@ -13,11 +13,15 @@ return new class extends Migration
     {
         Schema::create('promotions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('pack_alimentaire_id')->constrained()->onDelete('cascade');
+            $table->foreignId('pack_alimentaire_id')->nullable()->constrained()->onDelete('cascade');
+            $table->foreignId('pack_scolaire_id')->nullable()->constrained()->onDelete('cascade');
+            $table->string('type_pack')->default('alimentaire'); // 'alimentaire' ou 'scolaire'
             $table->decimal('prix_promotionnel', 8, 2);
             $table->date('date_debut');
             $table->date('date_fin');
             $table->timestamps();
+
+            $table->index(['type_pack']);
         });
     }
 
